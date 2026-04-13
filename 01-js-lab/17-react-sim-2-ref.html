@@ -1,0 +1,163 @@
+<!--
+useRef simulation — real-world scenarios:
+
+1. Storing a timer/interval ID so you can stop it without re-rendering
+2. Holding a DOM element reference for direct manipulation (focus, scroll)
+3. Tracking previous state to show "undo" or detect changes
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>useRef Simulation</title>
+  <style>
+    body { font-family: monospace; padding: 20px; }
+    .component { border: 2px solid #333; padding: 15px; margin: 10px 0; border-radius: 5px; }
+    button { padding: 8px 16px; margin: 5px; cursor: pointer; font-size: 14px; }
+    input { padding: 8px; margin: 5px; font-size: 14px; width: 200px; }
+    .session { color: #888; }
+    .status { font-weight: bold; }
+    .online { color: green; }
+    .offline { color: red; }
+  </style>
+</head>
+<body>
+  <h2>useRef Simulation — Real World Scenarios</h2>
+  <div id="app"></div>
+
+  <script>
+    function useRef(initialValue) {
+      return { current: initialValue };
+    }
+
+    function UserComponent(props) {
+      this.props = Object.freeze(props);
+
+      // STATE — things the user sees, triggers re-render
+      this.state = {
+        name: props.name,
+        isOnline: false,
+        sessionSeconds: 0
+      };
+
+      // REF 1: store the interval ID for the session timer
+      // Why ref? If we stored this in state, clearing the interval
+      // would trigger a re-render — but we don't need to re-render
+      // just because we stopped a timer
+      this.timerRef = useRef(null);
+
+      // REF 2: store previous name for "undo" feature
+      // Why ref? We need to remember the old value across re-renders
+      // but showing/hiding undo is driven by state, not by this value
+      this.prevNameRef = useRef(props.name);
+
+      // REF 3: DOM element reference for the name input
+      // Why ref? We need to focus/clear the input directly
+      // without re-rendering the whole component
+      this.inputRef = useRef(null);
+    }
+
+    UserComponent.prototype.setState = function (newState) {
+      Object.assign(this.state, newState);
+      this.render();
+    };
+
+    UserComponent.prototype.goOnline = function () {
+      // start session timer — store interval ID in ref
+      var self = this;
+      this.timerRef.current = setInterval(function () {
+        self.state.sessionSeconds++;
+        // update just the timer display — no full re-render needed
+        var timerEl = document.getElementById("timer");
+        if (timerEl) timerEl.textContent = self.formatTime(self.state.sessionSeconds);
+      }, 1000);
+
+      this.setState({ isOnline: true });
+    };
+
+    UserComponent.prototype.goOffline = function () {
+      // clear the timer using the ref — this is why we stored the ID
+      clearInterval(this.timerRef.current);
+      this.timerRef.current = null;
+
+      this.setState({ isOnline: false, sessionSeconds: 0 });
+    };
+
+    UserComponent.prototype.formatTime = function (seconds) {
+      var m = Math.floor(seconds / 60);
+      var s = seconds % 60;
+      return (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s;
+    };
+
+    UserComponent.prototype.render = function () {
+      var app = document.getElementById("app");
+      var statusClass = this.state.isOnline ? "online" : "offline";
+      var statusText = this.state.isOnline ? "Online" : "Offline";
+
+      app.innerHTML =
+        '<div class="component">' +
+          '<h3>User Profile</h3>' +
+
+          '<p>Name: <strong>' + this.state.name + '</strong></p>' +
+          '<p>Age: ' + this.props.age + '</p>' +
+          '<p>Status: <span class="status ' + statusClass + '">' + statusText + '</span></p>' +
+          '<p class="session">Session time: <span id="timer">' + this.formatTime(this.state.sessionSeconds) + '</span></p>' +
+
+          '<hr>' +
+
+          '<p><strong>1. Session Timer</strong> (ref stores interval ID)</p>' +
+          '<button id="toggleBtn">' + (this.state.isOnline ? "Go Offline" : "Go Online") + '</button>' +
+
+          '<p><strong>2. Edit Name</strong> (ref stores previous name for undo)</p>' +
+          '<input id="nameInput" type="text" placeholder="New name" />' +
+          '<button id="saveBtn">Save</button>' +
+          '<button id="undoBtn">Undo</button>' +
+
+          '<p><strong>3. Focus Input</strong> (ref holds DOM element)</p>' +
+          '<button id="focusBtn">Focus Name Input</button>' +
+        '</div>';
+
+      // store DOM ref
+      this.inputRef.current = document.getElementById("nameInput");
+
+      var self = this;
+
+      // 1. Toggle online/offline — timer uses ref to store interval ID
+      document.getElementById("toggleBtn").addEventListener("click", function () {
+        if (self.state.isOnline) {
+          self.goOffline();
+        } else {
+          self.goOnline();
+        }
+      });
+
+      // 2. Save name — store old name in ref for undo
+      document.getElementById("saveBtn").addEventListener("click", function () {
+        var newName = self.inputRef.current.value.trim();
+        if (newName && newName !== self.state.name) {
+          self.prevNameRef.current = self.state.name; // save old name in ref
+          self.setState({ name: newName });
+        }
+      });
+
+      // 2. Undo — restore previous name from ref
+      document.getElementById("undoBtn").addEventListener("click", function () {
+        if (self.prevNameRef.current !== self.state.name) {
+          var current = self.state.name;
+          self.setState({ name: self.prevNameRef.current });
+          self.prevNameRef.current = current;
+        }
+      });
+
+      // 3. Focus input — use DOM ref directly, no re-render needed
+      document.getElementById("focusBtn").addEventListener("click", function () {
+        self.inputRef.current.focus();
+      });
+    };
+
+    // --- Parent creates component with props ---
+    var user = new UserComponent({ name: "Anand", age: 25 });
+    user.render();
+  </script>
+</body>
+</html>

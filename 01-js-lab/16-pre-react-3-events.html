@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Events</title>
+</head>
+
+<body>
+  <h1>Events</h1>
+
+  <h2>Event Object</h2>
+  <button id="eventBtn">Click me — check console</button>
+  <div id="eventOutput" style="margin-top: 10px; padding: 10px; border: 1px solid #ccc;"></div>
+
+  <hr>
+  <h2>Event Bubbling</h2>
+  <div id="outer" style="padding: 30px; background: #ddd; cursor: pointer;">
+    Outer div
+    <div id="inner" style="padding: 20px; background: #aad; cursor: pointer;">
+      Inner div — click me and watch console
+    </div>
+  </div>
+
+  <script>
+    // --- 1. Events ---
+    const btn = document.getElementById("eventBtn");
+
+    btn.addEventListener("click", function handleClick(event) {
+      console.log("--- Event Object ---");
+      console.log("type:", event.type);
+      console.log("target:", event.target);
+      console.log("position:", event.clientX, event.clientY);
+      console.log("ctrl held?", event.ctrlKey);
+      console.log("shift held?", event.shiftKey);
+      console.log("button:", event.button, "(0=left, 1=middle, 2=right)");
+      console.log("timestamp:", event.timeStamp);
+      console.log("bubbles:", event.bubbles);
+      console.log("full event:", event);
+
+      document.getElementById("eventOutput").innerHTML = `
+        <p><strong>type:</strong> ${event.type}</p>
+        <p><strong>target:</strong> ${event.target.tagName}</p>
+        <p><strong>position:</strong> (${event.clientX}, ${event.clientY})</p>
+        <p><strong>ctrl:</strong> ${event.ctrlKey} | <strong>shift:</strong> ${event.shiftKey}</p>
+        <p><strong>button:</strong> ${event.button} (0=left, 1=middle, 2=right)</p>
+      `;
+    });
+
+    // --- 2. Event Bubbling ---
+    document.getElementById("outer").addEventListener("click", () => {
+      console.log("Bubble: outer div caught click");
+    });
+    document.getElementById("inner").addEventListener("click", () => {
+      console.log("Bubble: inner div caught click");
+    });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>CSS Animation Example</title>
+
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: #f4f4f4;
+        }
+
+        .box {
+            width: 100px;
+            height: 100px;
+            background-color: blue;
+
+            /* Apply animation */
+            animation-name: moveBox;
+            animation-duration: 10s;
+            animation-iteration-count: infinite;
+            animation-timing-function: ease-in-out;
+        }
+
+        /* Define animation */
+        @keyframes moveBox1 {
+            0% {
+                transform: translateX(0);
+                background-color: blue;
+            }
+
+            50% {
+                transform: translateY(200px);
+                background-color: red;
+            }
+
+            100% {
+                transform: translateX(10);
+                background-color: blue;
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="box"></div>
+
+</body>
+
+</html>

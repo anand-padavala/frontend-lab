@@ -1,0 +1,160 @@
+<!--
+useMemo simulation — real-world scenario:
+
+Problem: Expensive computations run on every re-render even when inputs haven't changed
+  e.g., filtering a large list, calculating totals, formatting dates
+
+Solution: useMemo — cache the result and only recompute when dependencies change
+  const filtered = useMemo(() => expensiveFilter(list, query), [list, query])
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>useMemo Simulation</title>
+  <style>
+    body { font-family: monospace; padding: 20px; }
+    .component { border: 2px solid #333; padding: 15px; margin: 10px 0; border-radius: 5px; }
+    button { padding: 8px 16px; margin: 5px; cursor: pointer; font-size: 14px; }
+    input { padding: 8px; margin: 5px; font-size: 14px; width: 200px; }
+    .cached { color: green; }
+    .recomputed { color: orange; }
+    #log { background: #1e1e1e; color: #0f0; padding: 10px; margin-top: 10px; min-height: 120px; white-space: pre-line; font-size: 13px; }
+  </style>
+</head>
+<body>
+  <h2>useMemo Simulation — Cache Expensive Computations</h2>
+  <div id="app"></div>
+  <div id="log"></div>
+
+  <script>
+    var logDiv = document.getElementById("log");
+    function log(msg, type) {
+      var color = type === "cached" ? "green" : type === "recomputed" ? "orange" : "#888";
+      logDiv.innerHTML += '<span style="color:' + color + '">' + msg + '</span>\n';
+      logDiv.scrollTop = logDiv.scrollHeight;
+    }
+
+    // --- useMemo: cache result, recompute only when deps change ---
+    function createMemoSystem() {
+      var cache = {};
+
+      return function useMemo(name, computeFn, deps) {
+        var prev = cache[name];
+
+        // check if deps changed
+        var depsChanged = false;
+        if (!prev) {
+          depsChanged = true;
+        } else {
+          for (var i = 0; i < deps.length; i++) {
+            if (deps[i] !== prev.deps[i]) {
+              depsChanged = true;
+              break;
+            }
+          }
+        }
+
+        if (depsChanged) {
+          var result = computeFn();
+          cache[name] = { deps: deps, result: result };
+          log("useMemo [" + name + "]: RECOMPUTED", "recomputed");
+          return result;
+        } else {
+          log("useMemo [" + name + "]: returned CACHED result", "cached");
+          return prev.result;
+        }
+      };
+    }
+
+    // --- Simulated employee data (imagine this is a large dataset) ---
+    var employees = [
+      { name: "Anand", department: "Engineering", salary: 90000 },
+      { name: "Priya", department: "Engineering", salary: 95000 },
+      { name: "Rahul", department: "Design", salary: 80000 },
+      { name: "Sara", department: "Engineering", salary: 88000 },
+      { name: "Vikram", department: "Design", salary: 82000 },
+      { name: "Meena", department: "Marketing", salary: 75000 },
+      { name: "Arjun", department: "Marketing", salary: 72000 },
+      { name: "Deepa", department: "Engineering", salary: 92000 }
+    ];
+
+    function EmployeeDashboard() {
+      this.state = {
+        filterDept: "All",
+        theme: "light"  // unrelated state — changing this should NOT recompute
+      };
+
+      this.useMemo = createMemoSystem();
+    }
+
+    EmployeeDashboard.prototype.setState = function (newState) {
+      Object.assign(this.state, newState);
+      this.render();
+    };
+
+    EmployeeDashboard.prototype.render = function () {
+      log("--- render() ---", "render");
+      var self = this;
+
+      // MEMOIZED: only recomputes when filterDept changes
+      var filtered = this.useMemo("filteredList", function () {
+        // simulate expensive work
+        var start = performance.now();
+        var result = employees.filter(function (e) {
+          return self.state.filterDept === "All" || e.department === self.state.filterDept;
+        });
+        // artificial delay to simulate heavy computation
+        while (performance.now() - start < 50) {} // 50ms of work
+        return result;
+      }, [this.state.filterDept]);
+
+      // MEMOIZED: total salary, only recomputes when filtered list changes
+      var totalSalary = this.useMemo("totalSalary", function () {
+        return filtered.reduce(function (sum, e) { return sum + e.salary; }, 0);
+      }, [this.state.filterDept]);
+
+      var rows = filtered.map(function (e) {
+        return '<tr><td>' + e.name + '</td><td>' + e.department + '</td><td>$' + e.salary.toLocaleString() + '</td></tr>';
+      }).join("");
+
+      var app = document.getElementById("app");
+      app.innerHTML =
+        '<div class="component" style="background:' + (this.state.theme === "dark" ? "#222" : "#fff") + '; color:' + (this.state.theme === "dark" ? "#eee" : "#000") + '">' +
+          '<h3>Employee Dashboard</h3>' +
+
+          '<p><strong>Filter by department:</strong></p>' +
+          '<button id="allBtn" ' + (this.state.filterDept === "All" ? 'style="font-weight:bold"' : '') + '>All</button>' +
+          '<button id="engBtn" ' + (this.state.filterDept === "Engineering" ? 'style="font-weight:bold"' : '') + '>Engineering</button>' +
+          '<button id="designBtn" ' + (this.state.filterDept === "Design" ? 'style="font-weight:bold"' : '') + '>Design</button>' +
+          '<button id="mktBtn" ' + (this.state.filterDept === "Marketing" ? 'style="font-weight:bold"' : '') + '>Marketing</button>' +
+
+          '<p>Showing ' + filtered.length + ' employees | Total salary: <strong>$' + totalSalary.toLocaleString() + '</strong></p>' +
+
+          '<table border="1" cellpadding="5" style="border-collapse:collapse">' +
+            '<tr><th>Name</th><th>Department</th><th>Salary</th></tr>' +
+            rows +
+          '</table>' +
+
+          '<hr>' +
+          '<p><strong>Toggle theme (unrelated state — should NOT recompute filters):</strong></p>' +
+          '<button id="themeBtn">Toggle Theme (current: ' + this.state.theme + ')</button>' +
+        '</div>';
+
+      document.getElementById("allBtn").addEventListener("click", function () { self.setState({ filterDept: "All" }); });
+      document.getElementById("engBtn").addEventListener("click", function () { self.setState({ filterDept: "Engineering" }); });
+      document.getElementById("designBtn").addEventListener("click", function () { self.setState({ filterDept: "Design" }); });
+      document.getElementById("mktBtn").addEventListener("click", function () { self.setState({ filterDept: "Marketing" }); });
+
+      // theme change triggers render but useMemo returns cached filter results
+      document.getElementById("themeBtn").addEventListener("click", function () {
+        var next = self.state.theme === "light" ? "dark" : "light";
+        self.setState({ theme: next });
+      });
+    };
+
+    var dashboard = new EmployeeDashboard();
+    dashboard.render();
+  </script>
+</body>
+</html>

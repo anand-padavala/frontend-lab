@@ -1,0 +1,206 @@
+<!--
+useEffect simulation — real-world scenarios:
+
+1. useEffect runs AFTER render (side effects like fetching data, subscribing to events)
+2. Dependency array controls WHEN the effect re-runs
+3. Cleanup function runs before the next effect or on unmount (unsubscribe, clear timers)
+
+useEffect(() => { ... }, [deps])
+  - no deps array   → runs after every render
+  - empty []        → runs once after first render (mount)
+  - [name, age]     → runs only when name or age changes
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>useEffect Simulation</title>
+  <style>
+    body { font-family: monospace; padding: 20px; }
+    .component { border: 2px solid #333; padding: 15px; margin: 10px 0; border-radius: 5px; }
+    button { padding: 8px 16px; margin: 5px; cursor: pointer; font-size: 14px; }
+    input { padding: 8px; margin: 5px; font-size: 14px; }
+    #log { background: #1e1e1e; color: #0f0; padding: 10px; margin-top: 10px; min-height: 150px; white-space: pre-line; font-size: 13px; }
+    .log-mount { color: cyan; }
+    .log-cleanup { color: orange; }
+    .log-effect { color: #0f0; }
+    .log-render { color: #888; }
+  </style>
+</head>
+<body>
+  <h2>useEffect Simulation — Real World Scenarios</h2>
+  <div id="app"></div>
+  <div id="log"></div>
+
+  <script>
+    var logDiv = document.getElementById("log");
+    function log(msg, type) {
+      var color = { mount: "cyan", cleanup: "orange", effect: "#0f0", render: "#888" }[type] || "#fff";
+      logDiv.innerHTML += '<span style="color:' + color + '">' + msg + '</span>\n';
+      logDiv.scrollTop = logDiv.scrollHeight;
+    }
+
+    // --- useEffect simulation ---
+    // Stores previous deps and cleanup functions per effect name
+    function createEffectSystem() {
+      var effects = {};
+
+      return function useEffect(name, effectFn, deps) {
+        var prev = effects[name];
+
+        // Check if deps changed
+        var shouldRun = false;
+        if (!prev) {
+          // first run — always execute
+          shouldRun = true;
+        } else if (!deps) {
+          // no deps array — run after every render
+          shouldRun = true;
+        } else {
+          // compare each dep with previous
+          for (var i = 0; i < deps.length; i++) {
+            if (deps[i] !== prev.deps[i]) {
+              shouldRun = true;
+              break;
+            }
+          }
+        }
+
+        if (shouldRun) {
+          // run cleanup from previous effect (if any)
+          if (prev && prev.cleanup) {
+            prev.cleanup();
+          }
+
+          // run the effect — it may return a cleanup function
+          var cleanup = effectFn();
+
+          // store for next comparison
+          effects[name] = { deps: deps, cleanup: cleanup };
+        }
+      };
+    }
+
+    function UserComponent(props) {
+      this.props = Object.freeze(props);
+
+      this.state = {
+        name: props.name,
+        isOnline: false,
+        windowWidth: window.innerWidth
+      };
+
+      this.useEffect = createEffectSystem();
+    }
+
+    UserComponent.prototype.setState = function (newState) {
+      Object.assign(this.state, newState);
+      this.render();
+    };
+
+    UserComponent.prototype.render = function () {
+      log("render()", "render");
+
+      var app = document.getElementById("app");
+      app.innerHTML =
+        '<div class="component">' +
+          '<h3>User Profile</h3>' +
+          '<p>Name: <strong>' + this.state.name + '</strong></p>' +
+          '<p>Status: ' + (this.state.isOnline ? '<span style="color:green">Online</span>' : '<span style="color:red">Offline</span>') + '</p>' +
+          '<p>Window width: ' + this.state.windowWidth + 'px</p>' +
+
+          '<hr>' +
+
+          '<p><strong>1. Edit Name</strong> (effect runs when name changes → updates document title)</p>' +
+          '<input id="nameInput" type="text" placeholder="New name" />' +
+          '<button id="saveBtn">Save Name</button>' +
+
+          '<p><strong>2. Go Online/Offline</strong> (effect subscribes/unsubscribes to window resize)</p>' +
+          '<button id="toggleBtn">' + (this.state.isOnline ? "Go Offline" : "Go Online") + '</button>' +
+
+          '<p><strong>3. Unmount</strong> (all cleanup functions run)</p>' +
+          '<button id="unmountBtn">Unmount Component</button>' +
+        '</div>';
+
+      var self = this;
+
+      document.getElementById("saveBtn").addEventListener("click", function () {
+        var newName = document.getElementById("nameInput").value.trim();
+        if (newName) self.setState({ name: newName });
+      });
+
+      document.getElementById("toggleBtn").addEventListener("click", function () {
+        self.setState({ isOnline: !self.state.isOnline });
+      });
+
+      document.getElementById("unmountBtn").addEventListener("click", function () {
+        self.unmount();
+      });
+
+      // --- Effects run AFTER render ---
+
+      // Effect 1: Update document title when name changes
+      // Like: useEffect(() => { document.title = name }, [name])
+      this.useEffect("titleSync", function () {
+        document.title = self.state.name + "'s Profile";
+        log("Effect [name]: document.title set to \"" + document.title + "\"", "effect");
+
+        // no cleanup needed for this effect
+      }, [this.state.name]);
+
+      // Effect 2: Subscribe to window resize ONLY when online
+      // Like: useEffect(() => {
+      //   if (!isOnline) return;
+      //   window.addEventListener("resize", handler);
+      //   return () => window.removeEventListener("resize", handler);
+      // }, [isOnline])
+      this.useEffect("resizeListener", function () {
+        if (!self.state.isOnline) {
+          log("Effect [isOnline]: offline — no resize listener", "effect");
+          return; // no cleanup needed
+        }
+
+        function handleResize() {
+          self.state.windowWidth = window.innerWidth;
+          var widthEl = document.querySelector(".component p:nth-child(3)");
+          if (widthEl) widthEl.textContent = "Window width: " + window.innerWidth + "px";
+        }
+
+        window.addEventListener("resize", handleResize);
+        log("Effect [isOnline]: subscribed to window resize", "effect");
+
+        // cleanup — runs before next effect or on unmount
+        return function () {
+          window.removeEventListener("resize", handleResize);
+          log("Cleanup [isOnline]: unsubscribed from window resize", "cleanup");
+        };
+      }, [this.state.isOnline]);
+
+      // Effect 3: Log every render (no deps = runs after every render)
+      // Like: useEffect(() => { console.log("rendered") })
+      this.useEffect("everyRender", function () {
+        log("Effect [no deps]: runs after every render", "effect");
+      }, undefined);
+    };
+
+    UserComponent.prototype.unmount = function () {
+      log("--- UNMOUNT: running all cleanup functions ---", "cleanup");
+
+      // simulate unmount — run cleanup for effects that have one
+      // In React, this happens automatically when component is removed
+      this.useEffect("resizeListener", function () {}, []);
+      this.useEffect("titleSync", function () {
+        document.title = "useEffect Simulation";
+      }, []);
+
+      document.getElementById("app").innerHTML =
+        '<div class="component"><p>Component unmounted. Refresh to restart.</p></div>';
+    };
+
+    // --- Mount the component ---
+    log("--- MOUNT ---", "mount");
+    var user = new UserComponent({ name: "Anand", age: 25 });
+    user.render();
+  </script>
+</body>
+</html>

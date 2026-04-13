@@ -1,0 +1,180 @@
+<!--
+useCallback simulation — real-world scenario:
+
+Problem: When a parent re-renders, it creates new function references every time.
+  If a child component receives a function as a prop, it re-renders unnecessarily
+  because the function reference changed (even though the logic is identical).
+
+Solution: useCallback — cache the function reference, only create a new one when deps change
+  const handleClick = useCallback(() => { ... }, [deps])
+
+useCallback is essentially useMemo but for functions:
+  useCallback(fn, deps)  ===  useMemo(() => fn, deps)
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>useCallback Simulation</title>
+  <style>
+    body { font-family: monospace; padding: 20px; }
+    .component { border: 2px solid #333; padding: 10px; margin: 8px 0; border-radius: 5px; }
+    .child { margin-left: 20px; border-color: #888; }
+    button { padding: 8px 16px; margin: 5px; cursor: pointer; font-size: 14px; }
+    .flash { animation: flash 0.5s; }
+    @keyframes flash { 0% { background: yellow; } 100% { background: transparent; } }
+    #log { background: #1e1e1e; color: #0f0; padding: 10px; margin-top: 10px; min-height: 150px; white-space: pre-line; font-size: 13px; }
+  </style>
+</head>
+<body>
+  <h2>useCallback Simulation — Prevent Unnecessary Child Re-renders</h2>
+  <div id="app"></div>
+  <div id="log"></div>
+
+  <script>
+    var logDiv = document.getElementById("log");
+    function log(msg, type) {
+      var colors = { parent: "#888", child: "cyan", skip: "green", rerender: "orange", callback: "#ff0" };
+      var color = colors[type] || "#fff";
+      logDiv.innerHTML += '<span style="color:' + color + '">' + msg + '</span>\n';
+      logDiv.scrollTop = logDiv.scrollHeight;
+    }
+
+    // --- useCallback: cache function reference, recreate only when deps change ---
+    function createCallbackSystem() {
+      var cache = {};
+
+      return function useCallback(name, fn, deps) {
+        var prev = cache[name];
+
+        var depsChanged = false;
+        if (!prev) {
+          depsChanged = true;
+        } else {
+          for (var i = 0; i < deps.length; i++) {
+            if (deps[i] !== prev.deps[i]) {
+              depsChanged = true;
+              break;
+            }
+          }
+        }
+
+        if (depsChanged) {
+          cache[name] = { deps: deps, fn: fn };
+          log("useCallback [" + name + "]: created NEW function reference", "callback");
+          return fn;
+        } else {
+          log("useCallback [" + name + "]: returned CACHED function reference", "skip");
+          return prev.fn;
+        }
+      };
+    }
+
+    // --- Child component: only re-renders if its props actually changed ---
+    function ChildComponent(name, container) {
+      this.name = name;
+      this.containerId = container;
+      this.prevProps = null;
+    }
+
+    ChildComponent.prototype.render = function (props) {
+      // simulate React.memo — skip render if props haven't changed
+      if (this.prevProps &&
+          this.prevProps.label === props.label &&
+          this.prevProps.onClick === props.onClick) {  // same function REFERENCE
+        log("  " + this.name + ": props unchanged, SKIP re-render", "skip");
+        return;
+      }
+
+      log("  " + this.name + ": props changed, RE-RENDERING", "rerender");
+      this.prevProps = { label: props.label, onClick: props.onClick };
+
+      var slot = document.getElementById(this.containerId);
+      if (!slot) return;
+
+      slot.innerHTML =
+        '<div class="component child flash">' +
+          '<h4>' + this.name + '</h4>' +
+          '<button id="' + this.containerId + '-btn">' + props.label + '</button>' +
+        '</div>';
+
+      document.getElementById(this.containerId + "-btn").addEventListener("click", props.onClick);
+    };
+
+    // --- Parent component ---
+    function ParentComponent() {
+      this.state = {
+        count: 0,
+        text: "Hello"
+      };
+
+      this.useCallback = createCallbackSystem();
+
+      // child components
+      this.counterChild = new ChildComponent("CounterButton (with useCallback)", "counter-slot");
+      this.textChild = new ChildComponent("TextButton (WITHOUT useCallback)", "text-slot");
+    }
+
+    ParentComponent.prototype.setState = function (newState) {
+      Object.assign(this.state, newState);
+      this.render();
+    };
+
+    ParentComponent.prototype.render = function () {
+      log("Parent render()", "parent");
+      var self = this;
+
+      var app = document.getElementById("app");
+      app.innerHTML =
+        '<div class="component">' +
+          '<h3>Parent Component</h3>' +
+          '<p>Count: <strong>' + this.state.count + '</strong></p>' +
+          '<p>Text: <strong>' + this.state.text + '</strong></p>' +
+
+          '<button id="countBtn">Increment Count</button>' +
+          '<button id="textBtn">Toggle Text</button>' +
+
+          '<hr>' +
+          '<p><strong>Child 1:</strong> onClick cached with useCallback([count]) — only re-renders when count changes</p>' +
+          '<div id="counter-slot"></div>' +
+
+          '<p><strong>Child 2:</strong> onClick is a NEW function every render — always re-renders</p>' +
+          '<div id="text-slot"></div>' +
+        '</div>';
+
+      document.getElementById("countBtn").addEventListener("click", function () {
+        self.setState({ count: self.state.count + 1 });
+      });
+
+      document.getElementById("textBtn").addEventListener("click", function () {
+        var next = self.state.text === "Hello" ? "Namaste" : "Hello";
+        self.setState({ text: next });
+      });
+
+      // WITH useCallback — function reference stays the same unless count changes
+      var cachedOnClick = this.useCallback("counterClick", function () {
+        alert("Count is: " + self.state.count);
+      }, [this.state.count]);
+
+      this.counterChild.render({
+        label: "Show Count (" + this.state.count + ")",
+        onClick: cachedOnClick
+      });
+
+      // WITHOUT useCallback — new function created every render
+      var freshOnClick = function () {
+        alert("Text is: " + self.state.text);
+      };
+      log("TextButton: created NEW function reference (no useCallback)", "callback");
+
+      this.textChild.render({
+        label: "Show Text (" + this.state.text + ")",
+        onClick: freshOnClick
+      });
+    };
+
+    var parent = new ParentComponent();
+    parent.render();
+  </script>
+</body>
+</html>

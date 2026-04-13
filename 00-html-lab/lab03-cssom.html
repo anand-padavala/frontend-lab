@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>CSS Rule Inspector</title>
+  <style>
+    body { font-family: Arial, sans-serif; display: flex; gap: 20px; }
+    #controls { width: 300px; }
+    #output { flex: 1; border-left: 1px solid #ccc; padding-left: 20px; white-space: pre-wrap; }
+    button { display: block; margin: 5px 0; width: 100%; }
+    .section { margin-top: 15px; }
+  </style>
+</head>
+<body>
+
+<div id="controls">
+  <h3>CSS Rule Inspector</h3>
+  <button onclick="listStyleSheets()">List Stylesheets</button>
+  <button onclick="listRules()">List All Rules</button>
+  <button onclick="inspectFirstRule()">Inspect First Rule</button>
+  <button onclick="clearOutput()">Clear Output</button>
+</div>
+
+<div id="output"></div>
+
+<script>
+const output = document.getElementById("output");
+
+function clearOutput() {
+  output.innerText = "";
+}
+
+function log(text) {
+  output.innerText += text + "\n";
+}
+
+function listStyleSheets() {
+  clearOutput();
+
+  const sheets = document.styleSheets;
+
+  for (let i = 0; i < sheets.length; i++) {
+    const sheet = sheets[i];
+    log(`Stylesheet ${i}: ${sheet.href || "inline"}`);
+  }
+}
+
+function listRules() {
+  clearOutput();
+
+  const sheets = Array.from(document.styleSheets);
+
+  sheets.forEach((sheet, sIndex) => {
+    log(`\nStylesheet ${sIndex}: ${sheet.href || "inline"}`);
+
+    try {
+      const rules = sheet.cssRules;
+
+      for (let i = 0; i < rules.length; i++) {
+        log(`  Rule ${i}: ${rules[i].cssText}`);
+      }
+    } catch (e) {
+      log("  Cannot access rules (CORS restriction)");
+    }
+  });
+}
+
+function inspectFirstRule() {
+  clearOutput();
+
+  const sheet = document.styleSheets[0];
+
+  try {
+    const rule = sheet.cssRules[0];
+
+    log("=== Rule Object Properties ===");
+    for (let key in rule) {
+      log(key + ": " + rule[key]);
+    }
+
+    log("\n=== Own Properties ===");
+    Object.getOwnPropertyNames(rule).forEach(prop => {
+      log(prop + ": " + rule[prop]);
+    });
+
+    if (rule.style) {
+      log("\n=== CSS Declarations ===");
+      const style = rule.style;
+      for (let i = 0; i < style.length; i++) {
+        const name = style[i];
+        const value = style.getPropertyValue(name);
+        log(name + ": " + value);
+      }
+    }
+
+    if (rule.media) {
+      log("\n=== Media Query ===");
+      log(rule.media.mediaText);
+    }
+
+  } catch (e) {
+    log("Error accessing rules: " + e.message);
+  }
+}
+</script>
+
+</body>
+</html>

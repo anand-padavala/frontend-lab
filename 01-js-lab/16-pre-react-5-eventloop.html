@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Event Loop Demo</title>
+  <style>
+    body { font-family: monospace; padding: 20px; }
+    #log { background: #1e1e1e; color: #0f0; padding: 15px; border-radius: 5px; min-height: 300px; white-space: pre-line; }
+    button { padding: 10px 20px; margin: 10px 5px; font-size: 16px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h2>Event Loop Demo</h2>
+  <button id="startBtn">Run Demo</button>
+  <button id="clickBtn">Click Me (registered event)</button>
+  <div id="log"></div>
+
+  <script>
+    const logDiv = document.getElementById("log");
+    let order = 1;
+
+    function log(msg, color) {
+      logDiv.innerHTML += `<span style="color:${color || '#0f0'}">${order++}. ${msg}</span>\n`;
+    }
+
+    // Register a click event — stored in Web APIs until clicked
+    document.getElementById("clickBtn").addEventListener("click", function (e) {
+      log("CLICK handler executed (from Task Queue)", "orange");
+    });
+
+    document.getElementById("startBtn").addEventListener("click", function () {
+      logDiv.innerHTML = "";
+      order = 1;
+
+      // 1. Synchronous — runs immediately on Call Stack
+      log("Sync code START (Call Stack)", "white");
+
+      // 2. setTimeout — goes to Web APIs, then Task Queue
+      setTimeout(function () {
+        log("setTimeout callback (Task Queue — ran after Call Stack emptied)", "yellow");
+      }, 0);
+
+      // 3. Promise — goes to Microtask Queue (runs before Task Queue)
+      Promise.resolve().then(function () {
+        log("Promise.then (Microtask Queue — runs before setTimeout)", "cyan");
+      });
+
+      // 4. Another Promise
+      Promise.resolve().then(function () {
+        log("Promise.then #2 (Microtask Queue)", "cyan");
+      });
+
+      // 5. More synchronous code
+      log("Sync code END (Call Stack)", "white");
+
+      // Execution order:
+      // 1. Sync START        — Call Stack
+      // 2. Sync END          — Call Stack
+      // 3. Promise.then      — Microtask Queue (higher priority)
+      // 4. Promise.then #2   — Microtask Queue
+      // 5. setTimeout        — Task Queue (lower priority)
+      // 6. Click handler     — Task Queue (when you click)
+    });
+  </script>
+</body>
+</html>

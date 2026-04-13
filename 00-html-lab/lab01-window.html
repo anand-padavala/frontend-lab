@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Window API Categories Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        h2 {
+            border-bottom: 1px solid #ccc;
+            margin-top: 20px;
+        }
+
+        button {
+            margin: 5px;
+            padding: 8px;
+            cursor: pointer;
+        }
+
+        #output {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background: #111;
+            color: #0f0;
+            height: 300px;
+            overflow-y: auto;
+            font-family: monospace;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Window Object API Categories</h1>
+
+
+    <!-- Browser APIs -->
+    <h2>Browser APIs</h2>
+    <button onclick="showLocation()">Show Location</button>
+    <button onclick="showHistoryLength()">History Length</button>
+    <button onclick="showNavigator()">Show Navigator Info</button>
+
+    <!-- Runtime APIs -->
+    <h2>Runtime APIs</h2>
+    <button onclick="runTimer()">setTimeout Demo</button>
+    <button onclick="eventDemo()">Add Click Event Listener</button>
+
+    <!-- Storage APIs -->
+    <h2>Storage APIs</h2>
+    <button onclick="setStorage()">Set Local Storage</button>
+    <button onclick="getStorage()">Get Local Storage</button>
+
+    <!-- Rendering APIs -->
+    <h2>Rendering APIs</h2>
+    <button onclick="animateDemo()">requestAnimationFrame Demo</button>
+
+    <!-- Utility Functions -->
+    <h2>Utility Functions</h2>
+    <button onclick="encodeDemo()">Encode URI</button>
+    <button onclick="alertDemo()">Alert</button>
+    <button onclick="confirmDemo()">Confirm</button>
+
+    <h2>Clear Function</h2>
+    <button onclick="clearOutput()">Clear Output</button>
+    
+
+    <div id="output"></div>
+
+    <script>
+        const output = document.getElementById("output");
+
+        // Clears previous output and prints only the latest message
+        function log(msg) {
+            const line = document.createElement("div");
+            line.textContent = msg;
+            output.appendChild(line);
+        }
+
+        function clearOutput() {
+            output.textContent = "";
+        }
+
+        function createElementDemo() {
+            const div = document.createElement("div");
+            div.textContent = "New element created!";
+            document.body.appendChild(div);
+            log("Created and appended a new DOM element");
+        }
+
+        /* ---------------- Browser APIs ---------------- */
+        function showLocation() {
+            log("URL: " + window.location.href);
+        }
+
+        function showHistoryLength() {
+            log("History Length: " + window.history.length);
+        }
+
+        function showNavigator() {
+            log("User Agent: " + navigator.userAgent);
+        }
+
+        /* ---------------- Runtime APIs ---------------- */
+        function runTimer() {
+            log("Timer started...");
+            setTimeout(() => {
+                log("Timer executed after 2 seconds");
+            }, 2000);
+        }
+
+        function eventDemo() {
+            const handler = () => log("Window clicked!");
+            window.addEventListener("click", handler);
+            log("Click anywhere on the window to trigger event");
+        }
+
+        /* ---------------- Storage APIs ---------------- */
+        function setStorage() {
+            localStorage.setItem("demoKey", "Hello World");
+            log("Stored value in localStorage");
+        }
+
+        function getStorage() {
+            const value = localStorage.getItem("demoKey");
+            log("Retrieved from localStorage: " + value);
+        }
+
+        /* ---------------- Rendering APIs ---------------- */
+        function animateDemo() {
+            function step() {
+                log("Animation frame executed");
+            }
+            requestAnimationFrame(step);
+        }
+
+        /* ---------------- Utility Functions ---------------- */
+        function encodeDemo() {
+            const encoded = encodeURIComponent("hello world");
+            log("Encoded URI: " + encoded);
+        }
+
+        function alertDemo() {
+            alert("This is an alert");
+            log("Alert triggered");
+        }
+
+        function confirmDemo() {
+            const result = confirm("Do you confirm?");
+            log("Confirm result: " + result);
+        }
+
+    </script>
+
+</body>
+
+</html>

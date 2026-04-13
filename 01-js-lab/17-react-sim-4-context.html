@@ -1,0 +1,147 @@
+<!--
+useContext simulation — real-world scenario:
+
+Problem: Passing theme/user down through many levels of components (prop drilling)
+  App → Header → Nav → UserMenu → UserName (needs user data)
+
+Solution: useContext — create a shared "context" that any component can read directly
+  App creates context → any nested component reads it without props
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>useContext Simulation</title>
+  <style>
+    body { font-family: monospace; padding: 20px; }
+    .component { border: 2px solid #333; padding: 10px; margin: 8px 0; border-radius: 5px; }
+    .nested { margin-left: 20px; border-color: #888; }
+    .deep-nested { margin-left: 40px; border-color: #aaa; }
+    button { padding: 8px 16px; margin: 5px; cursor: pointer; font-size: 14px; }
+    .dark { background: #222; color: #eee; }
+    .dark .component { border-color: #666; }
+    .light { background: #fff; color: #000; }
+  </style>
+</head>
+<body>
+  <h2>useContext Simulation — No Prop Drilling</h2>
+  <div id="app"></div>
+
+  <script>
+    // --- createContext: a shared store any component can read ---
+    function createContext(defaultValue) {
+      var context = {
+        _value: defaultValue,
+        _listeners: [],
+
+        // Provider: sets the value and notifies all consumers
+        provide: function (value) {
+          context._value = value;
+          // notify all listening components to re-render
+          context._listeners.forEach(function (fn) { fn(); });
+        },
+
+        // useContext: read current value + subscribe to changes
+        use: function (component) {
+          // register this component to re-render when context changes
+          if (context._listeners.indexOf(component.render.bind(component)) === -1) {
+            context._listeners.push(component.render.bind(component));
+          }
+          return context._value;
+        }
+      };
+      return context;
+    }
+
+    // --- Two contexts: Theme and User (like real React apps) ---
+    var ThemeContext = createContext("light");
+    var UserContext = createContext({ name: "Guest", isLoggedIn: false });
+
+    // --- App: the top-level component that provides context ---
+    var App = {
+      render: function () {
+        var theme = ThemeContext._value;
+        var user = UserContext._value;
+
+        var app = document.getElementById("app");
+        app.className = theme;
+        app.innerHTML =
+          '<div class="component">' +
+            '<h3>App (provides ThemeContext & UserContext)</h3>' +
+            '<button id="themeBtn">Toggle Theme (current: ' + theme + ')</button>' +
+            '<button id="loginBtn">' + (user.isLoggedIn ? "Logout" : "Login as Anand") + '</button>' +
+            '<div id="header-slot"></div>' +
+          '</div>';
+
+        document.getElementById("themeBtn").addEventListener("click", function () {
+          var next = ThemeContext._value === "light" ? "dark" : "light";
+          ThemeContext.provide(next); // all consumers re-render
+        });
+
+        document.getElementById("loginBtn").addEventListener("click", function () {
+          if (UserContext._value.isLoggedIn) {
+            UserContext.provide({ name: "Guest", isLoggedIn: false });
+          } else {
+            UserContext.provide({ name: "Anand", isLoggedIn: true });
+          }
+        });
+
+        Header.render();
+      }
+    };
+
+    // --- Header: does NOT need theme or user, just passes through ---
+    // Without context, Header would have to accept props just to forward them
+    var Header = {
+      render: function () {
+        var slot = document.getElementById("header-slot");
+        if (!slot) return;
+        slot.innerHTML =
+          '<div class="component nested">' +
+            '<h4>Header (no props needed — does not care about theme or user)</h4>' +
+            '<div id="nav-slot"></div>' +
+          '</div>';
+
+        Nav.render();
+      }
+    };
+
+    // --- Nav: reads ThemeContext directly, no prop drilling ---
+    var Nav = {
+      render: function () {
+        var theme = ThemeContext.use(Nav); // useContext(ThemeContext)
+        var slot = document.getElementById("nav-slot");
+        if (!slot) return;
+        slot.innerHTML =
+          '<div class="component deep-nested">' +
+            '<h4>Nav (reads ThemeContext directly)</h4>' +
+            '<p>Theme from context: <strong>' + theme + '</strong></p>' +
+            '<div id="usermenu-slot"></div>' +
+          '</div>';
+
+        UserMenu.render();
+      }
+    };
+
+    // --- UserMenu: reads UserContext directly, no prop drilling ---
+    var UserMenu = {
+      render: function () {
+        var user = UserContext.use(UserMenu); // useContext(UserContext)
+        var theme = ThemeContext.use(UserMenu);
+        var slot = document.getElementById("usermenu-slot");
+        if (!slot) return;
+        slot.innerHTML =
+          '<div class="component deep-nested" style="border-color:' + (theme === "dark" ? "#0f0" : "#00f") + '">' +
+            '<h4>UserMenu (reads UserContext directly)</h4>' +
+            '<p>User: <strong>' + user.name + '</strong></p>' +
+            '<p>Logged in: ' + (user.isLoggedIn ? "Yes" : "No") + '</p>' +
+            '<p>No props were passed through Header or Nav!</p>' +
+          '</div>';
+      }
+    };
+
+    // --- Mount ---
+    App.render();
+  </script>
+</body>
+</html>

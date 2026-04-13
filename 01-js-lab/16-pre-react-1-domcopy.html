@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Document, Objects &amp; Clone</title>
+</head>
+
+<body>
+  <h1>User Object</h1>
+  <div id="output"></div>
+
+  <script>
+    // --- 1. User Object ---
+    const user = {
+      name: "Anand",
+      age: 25,
+      greet() { return "Hi, I'm " + this.name; }
+    };
+
+    const output = document.getElementById("output");
+    output.innerHTML = `
+      <p><strong>Name:</strong> ${user.name}</p>
+      <p><strong>Age:</strong> ${user.age}</p>
+      <p><strong>Full object:</strong> ${JSON.stringify(user)}</p>
+    `;
+
+    // --- 2. Document ---
+    console.log("--- Document ---");
+    console.log("document:", document);
+    console.dir(document);
+    console.log("document.images:", document.images);
+    console.log("document.scripts:", document.scripts);
+    console.log("document.styleSheets:", document.styleSheets);
+
+    // --- 3. Clone (like virtual DOM concept) ---
+    console.log("--- Clone ---");
+    const clone = document.documentElement.cloneNode(true);
+    console.log("clone:", clone);
+    // Modify clone — page is NOT affected
+    clone.querySelector("h1").textContent = "I'm the clone!";
+    console.log("clone h1:", clone.querySelector("h1").textContent);
+    console.log("real h1:", document.querySelector("h1").textContent);
+  </script>
+</body>
+
+</html>

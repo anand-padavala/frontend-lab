@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Timers &amp; Event Loop</title>
+</head>
+
+<body>
+  <h1>Timers &amp; Event Loop</h1>
+
+  <h2>1. setTimeout — one-shot timer</h2>
+  <button id="timerBtn">Start 2s timer</button>
+  <div id="timerOutput" style="margin-top: 10px; padding: 10px; border: 1px solid #ccc;">Waiting...</div>
+
+  <hr>
+  <h2>2. setInterval — repeating timer</h2>
+  <button id="startInterval">Start counter</button>
+  <button id="stopInterval">Stop counter</button>
+  <div id="intervalOutput" style="margin-top: 10px; padding: 10px; border: 1px solid #ccc;">Counter: 0</div>
+
+  <hr>
+  <h2>3. Event Loop order — check console</h2>
+  <button id="eventLoopBtn">Run event loop demo</button>
+  <pre id="eventLoopOutput" style="margin-top: 10px; padding: 10px; border: 1px solid #ccc; background: #f5f5f5;"></pre>
+
+  <hr>
+  <h2>4. Timer is NOT exact — check console</h2>
+  <button id="blockBtn">Run blocking demo</button>
+  <pre id="blockOutput" style="margin-top: 10px; padding: 10px; border: 1px solid #ccc; background: #f5f5f5;"></pre>
+
+  <script>
+    // --- 1. setTimeout ---
+    document.getElementById("timerBtn").addEventListener("click", () => {
+      const output = document.getElementById("timerOutput");
+      const start = performance.now();
+      output.textContent = "Timer started...";
+
+      setTimeout(() => {
+        const elapsed = (performance.now() - start).toFixed(2);
+        output.textContent = `Timer fired after ${elapsed}ms (requested 2000ms)`;
+        console.log(`setTimeout fired after ${elapsed}ms`);
+      }, 2000);
+    });
+
+    // --- 2. setInterval ---
+    let count = 0;
+    let intervalId = null;
+
+    document.getElementById("startInterval").addEventListener("click", () => {
+      if (intervalId) return; // already running
+      count = 0;
+      intervalId = setInterval(() => {
+        count++;
+        document.getElementById("intervalOutput").textContent = `Counter: ${count}`;
+        console.log(`Interval tick: ${count}`);
+      }, 1000);
+    });
+
+    document.getElementById("stopInterval").addEventListener("click", () => {
+      clearInterval(intervalId);
+      intervalId = null;
+      console.log("Interval stopped at count:", count);
+    });
+
+    // --- 3. Event Loop order ---
+    // Shows: sync → microtask (Promise) → macrotask (setTimeout)
+    document.getElementById("eventLoopBtn").addEventListener("click", () => {
+      const log = [];
+
+      log.push("1. Sync: start");
+
+      setTimeout(() => {
+        log.push("5. Macrotask: setTimeout 0ms");
+        render();
+      }, 0);
+
+      Promise.resolve().then(() => {
+        log.push("3. Microtask: Promise.then 1");
+      }).then(() => {
+        log.push("4. Microtask: Promise.then 2");
+        render();
+      });
+
+      log.push("2. Sync: end");
+      render();
+
+      function render() {
+        const text = log.join("\n");
+        document.getElementById("eventLoopOutput").textContent = text;
+        console.log("--- Event Loop Order ---\n" + text);
+      }
+    });
+
+    // --- 4. Timer is NOT exact ---
+    // setTimeout says 100ms, but we block JS for 500ms
+    document.getElementById("blockBtn").addEventListener("click", () => {
+      const output = document.getElementById("blockOutput");
+      const log = [];
+      const start = performance.now();
+
+      setTimeout(() => {
+        const elapsed = (performance.now() - start).toFixed(2);
+        log.push(`Timer fired after: ${elapsed}ms (requested 100ms)`);
+        log.push(`Delayed because call stack was busy for 500ms`);
+        log.push(`Timer waited in the macrotask queue until stack was free`);
+        output.textContent = log.join("\n");
+        console.log("--- Timer NOT exact ---\n" + log.join("\n"));
+      }, 100);
+
+      // Block the call stack for 500ms — timer can't fire during this
+      log.push("Blocking call stack for 500ms...");
+      output.textContent = log.join("\n");
+      const blockUntil = performance.now() + 500;
+      while (performance.now() < blockUntil) {
+        // busy wait — nothing else can run
+      }
+      log.push(`Blocking done at ${(performance.now() - start).toFixed(2)}ms`);
+      log.push("Now event loop can pick up the timer...");
+      output.textContent = log.join("\n");
+    });
+  </script>
+</body>
+
+</html>

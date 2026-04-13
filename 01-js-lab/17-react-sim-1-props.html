@@ -1,0 +1,97 @@
+<!--  
+The core idea of this program is to simulate the react props and state:
+
+1. State changes trigger a re-render
+2. The UI is always a reflection of current state
+3. You never update the DOM directly — you update state, and render() rebuilds the UI
+The only difference is React is smarter about step 3 — it uses a virtual DOM to diff and only update what changed, instead of replacing the entire innerHTML like we do here.
+
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Props & State Simulation</title>
+  <style>
+    body { font-family: monospace; padding: 20px; }
+    .component { border: 2px solid #333; padding: 15px; margin: 10px 0; border-radius: 5px; }
+    button { padding: 8px 16px; margin: 5px; cursor: pointer; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <h2>Props & State Simulation (Pre-React)</h2>
+  <div id="app"></div>
+
+  <script>
+    // --- UserComponent with constructor, real props & state ---
+
+    function UserComponent(props) {
+      // props: passed from outside, frozen (read-only)
+      this.props = Object.freeze(props);
+
+      // state: real user state managed internally
+      this.state = {
+        isLoggedIn: false,
+        theme: "light",
+        notifications: 0
+      };
+    }
+
+    UserComponent.prototype.setState = function (newState) {
+      Object.assign(this.state, newState);
+      console.log("State updated:", JSON.stringify(this.state));
+      this.render();
+    };
+
+    UserComponent.prototype.render = function () {
+      const app = document.getElementById("app");
+      app.innerHTML = `
+        <div class="component" style="background:${this.state.theme === "dark" ? "#222" : "#fff"}; color:${this.state.theme === "dark" ? "#eee" : "#000"}">
+          <h3>UserComponent</h3>
+
+          <p><strong>Props (from parent, read-only):</strong></p>
+          <p>Name: ${this.props.name}</p>
+          <p>Age: ${this.props.age}</p>
+
+          <p><strong>State (internal):</strong></p>
+          <p>Logged In: ${this.state.isLoggedIn ? "Yes" : "No"}</p>
+          <p>Theme: ${this.state.theme}</p>
+          <p>Notifications: ${this.state.notifications}</p>
+
+          <button id="loginBtn">${this.state.isLoggedIn ? "Logout" : "Login"}</button>
+          <button id="themeBtn">Toggle Theme</button>
+          <button id="notifyBtn">Add Notification (${this.state.notifications})</button>
+          <button id="clearBtn">Clear Notifications</button>
+        </div>
+      `;
+
+      const self = this;
+
+      document.getElementById("loginBtn").addEventListener("click", function () {
+        self.setState({ isLoggedIn: !self.state.isLoggedIn });
+      });
+
+      document.getElementById("themeBtn").addEventListener("click", function () {
+        const next = self.state.theme === "light" ? "dark" : "light";
+        self.setState({ theme: next });
+      });
+
+      document.getElementById("notifyBtn").addEventListener("click", function () {
+        self.setState({ notifications: self.state.notifications + 1 });
+      });
+
+      document.getElementById("clearBtn").addEventListener("click", function () {
+        self.setState({ notifications: 0 });
+      });
+
+    };
+
+    // --- Parent creates the component by passing props ---
+    const user = new UserComponent({ name: "Anand", age: 25 });
+    user.render();
+
+    console.log("Props:", user.props);
+    console.log("State:", user.state);
+  </script>
+</body>
+</html>
