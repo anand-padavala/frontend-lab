@@ -5,7 +5,7 @@ import { useState } from "react";
 function Tab5_Conditional() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
-  const score = 75;
+  const score = 90;
 
   return (
     <div>

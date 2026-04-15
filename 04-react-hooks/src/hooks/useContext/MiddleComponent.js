@@ -1,12 +1,12 @@
-import ThemedBox from "./ThemedBox";
+import UserProfile from "./UserProfile";
 
-// This component doesn't use theme at all — it just passes through.
-// Without context, you'd have to pass theme as a prop here too.
+// This component doesn't use user at all — it just passes through.
+// Without context, you'd have to pass user as a prop here too.
 function MiddleComponent() {
   return (
     <div style={{ padding: "10px", border: "1px dashed #aaa", marginTop: "10px" }}>
-      <p>MiddleComponent — doesn't know about theme</p>
-      <ThemedBox />
+      <p>MiddleComponent — doesn't know about user</p>
+      <UserProfile />
     </div>
   );
 }

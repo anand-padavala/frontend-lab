@@ -18,8 +18,12 @@ class FiberNode {
   constructor(componentFn, props = {}) {
     this.componentFn = componentFn;
     this.props = props;
-    this.hooks = [];
-    this.effects = [];  // effects queued during render
+    // Why do you need an array for hooks?
+    // Because it needs to store many states/values for the component. Each useState stores one value in one hook[0]
+    this.hooks = []; 
+    // Why do you need array of hooks?
+    // You may need different effects depending on the multiple state updates
+    this.effects = [];  
   }
 
   render() {

@@ -9,6 +9,13 @@
 // 4. Calling setter triggers a re-render automatically.
 // ============================================================
 
+// Questions. 
+// 1. Why useState is a global function which is outside of the FiberNode
+// 2. Why setState is inside of the useState
+// 3. What if we keep useState inside of the FiberNode?
+// 4. Why setState is taking the newValue as a function or regular int?
+// 5. How do you pass the object like user object having name, age. And you want to store this in the state?
+
 // --- Global pointers (React keeps these internally) ---
 let currentFiber = null;
 let hookIndex = 0;
@@ -65,13 +72,15 @@ function useState(initialValue) {
 // ============================================================
 function Counter(props) {
   const [count, setCount] = useState(0);
+  const [product, setProduct] = useState({name: "iPhone", ver:1});
+  const [count1, setCount1] = useState(0);
 
   // Event handlers — just like onClick={() => setCount(...)} in React
-  const onIncrement = () => setCount(prev => prev + 1);
+  const onIncrement = () => setProduct( prev => {prev.ver=prev.ver+1; return prev});
   const onReset = () => setCount(0);
 
   return {
-    message: `Hello ${props.name}, count = ${count}`,
+    message: `Hello ${props.name}, count = ${count} - ${product}`,
     onIncrement,
     onReset,
   };

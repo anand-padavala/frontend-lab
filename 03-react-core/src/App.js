@@ -8,6 +8,7 @@ import Tab5_Conditional from "./Tab5_Conditional";
 import Tab6_UseEffect from "./Tab6_UseEffect";
 import Tab7_UseRef from "./Tab7_UseRef";
 import Tab8_UseContext from "./Tab8_UseContext";
+import Tab8_Only_UseContext from "./Tab8_Only_UseContext";
 import Tab9_UserForm from "./Tab9_UserForm";
 
 const tabs = [
@@ -20,6 +21,7 @@ const tabs = [
   { label: "6. useEffect", component: Tab6_UseEffect },
   { label: "7. useRef", component: Tab7_UseRef },
   { label: "8. useContext", component: Tab8_UseContext },
+  { label: "8b. Context Only", component: Tab8_Only_UseContext },
   { label: "9. User Form", component: Tab9_UserForm },
 ];
 

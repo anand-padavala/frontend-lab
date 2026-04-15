@@ -20,7 +20,7 @@ function Tab4_Events() {
       <h2>Events</h2>
       <p>Handle clicks, typing, hover, etc.</p>
 
-      <p style={{ color, fontSize: "20px" }}>{message}</p>
+      <p style={{ "color":color, fontSize: "20px" }}>{message}</p>
 
       <h3>1. Click Events</h3>
       <button onClick={handleClick}>Click me</button>{" "}
