@@ -1,0 +1,142 @@
+/* --- Card Preview --- */
+.cc-preview {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+.cc-card {
+  width: 340px;
+  height: 200px;
+  background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+  border-radius: 16px;
+  padding: 24px;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  font-family: "Courier New", monospace;
+}
+
+.cc-card-type {
+  font-size: 18px;
+  font-weight: bold;
+  text-align: right;
+  letter-spacing: 2px;
+}
+
+.cc-card-number {
+  font-size: 22px;
+  letter-spacing: 3px;
+  text-align: center;
+}
+
+.cc-card-bottom {
+  display: flex;
+  justify-content: space-between;
+}
+
+.cc-card-label {
+  font-size: 9px;
+  opacity: 0.7;
+  letter-spacing: 1px;
+}
+
+.cc-card-value {
+  font-size: 14px;
+  margin-top: 2px;
+}
+
+/* --- Form --- */
+.cc-wrapper {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.cc-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.cc-field {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.cc-field label {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: #333;
+}
+
+.cc-input {
+  padding: 10px 12px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.cc-input:focus {
+  border-color: #0f3460;
+}
+
+.cc-input.error {
+  border-color: #e74c3c;
+}
+
+.cc-error {
+  color: #e74c3c;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.cc-row {
+  display: flex;
+  gap: 16px;
+}
+
+.cc-btn {
+  padding: 12px;
+  background: #0f3460;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 8px;
+}
+
+.cc-btn:hover {
+  background: #1a1a2e;
+}
+
+/* --- Success --- */
+.cc-success {
+  max-width: 400px;
+  margin: 0 auto;
+  text-align: center;
+  padding: 32px;
+  background: #e8f5e9;
+  border-radius: 12px;
+}
+
+.cc-success h3 {
+  color: #2e7d32;
+  margin-bottom: 16px;
+}
+
+.cc-success p {
+  margin: 8px 0;
+  font-size: 15px;
+}
+
+.cc-success .cc-btn {
+  margin-top: 20px;
+}

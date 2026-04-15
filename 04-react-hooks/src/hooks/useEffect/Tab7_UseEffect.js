@@ -12,22 +12,22 @@ function Tab7_UseEffect() {
   // useEffect — runs AFTER the browser paints
   useEffect(() => {
     addLog(`useEffect: count is ${count}`);
-   // return () => addLog(`useEffect cleanup: count was ${count}`);
+    return () => addLog(`useEffect cleanup: count was ${count}`);
   }, [count]);
 
   // useLayoutEffect — runs BEFORE the browser paints
   useLayoutEffect(() => {
     addLog(`useLayoutEffect: count is ${count}`);
-   // return () => addLog(`useLayoutEffect cleanup: count was ${count}`);
+    return () => addLog(`useLayoutEffect cleanup: count was ${count}`);
   }, [count]);
 
   // Auto-scroll logs
- /* useEffect(() => {
+  useEffect(() => {
     if (logRef.current) {
       logRef.current.scrollTop = logRef.current.scrollHeight;
     }
   }, [logs]);
-*/
+
   return (
     <div>
       <h2>useEffect & useLayoutEffect</h2>

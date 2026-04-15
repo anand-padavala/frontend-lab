@@ -19,17 +19,14 @@ function Tab6_UseEffect() {
   }, [count]);
 
   // 3. Timer — runs once, cleans up when component unmounts
-  useEffect(myfun, []);
-
-  function myfun() {
+  useEffect(() => {
     const timer = setInterval(() => {
       setSeconds(prev => prev + 1);
-      console.log("This is running cont...");
     }, 1000);
 
     // Cleanup — runs when component unmounts
     return () => clearInterval(timer);
-  }
+  }, []);
 
   // 4. Fetch data from API
   function fetchUsers() {
