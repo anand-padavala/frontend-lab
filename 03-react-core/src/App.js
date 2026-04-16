@@ -10,6 +10,7 @@ import Tab7_UseRef from "./Tab7_UseRef";
 import Tab8_UseContext from "./Tab8_UseContext";
 import Tab8_Only_UseContext from "./Tab8_Only_UseContext";
 import Tab9_UserForm from "./Tab9_UserForm";
+import Tab10_SimpleForm from "./Tab10_SimpleForm";
 
 const tabs = [
   { label: "0. Sandbox", component: Tab0_Sandbox },
@@ -23,6 +24,7 @@ const tabs = [
   { label: "8. useContext", component: Tab8_UseContext },
   { label: "8b. Context Only", component: Tab8_Only_UseContext },
   { label: "9. User Form", component: Tab9_UserForm },
+  { label: "10. Simple Form", component: Tab10_SimpleForm },
 ];
 
 function App() {
