@@ -1,31 +1,38 @@
-import { useState } from "react";
+import { Routes, Route, Link, useLocation } from "react-router-dom";
 import CreditCardForm from "./components/CreditCard/CreditCardForm";
+import UserProfileForm from "./components/UserProfile/UserProfileForm";
+import UserList from "./components/UserList/UserList";
 import "./App.css";
 
 const apps = [
-  { label: "1. Credit Card", component: CreditCardForm },
+  { path: "/", label: "1. Credit Card", component: CreditCardForm },
+  { path: "/profile", label: "2. User Profile", component: UserProfileForm },
+  { path: "/users", label: "3. User Directory", component: UserList },
 ];
 
 function App() {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const ActiveComponent = apps[activeIndex].component;
+  const location = useLocation();
 
   return (
     <div className="app">
       <h1>React Apps</h1>
       <nav className="tab-bar">
-        {apps.map((app, i) => (
-          <button
-            key={i}
-            onClick={() => setActiveIndex(i)}
-            className={i === activeIndex ? "tab active" : "tab"}
+        {apps.map((app) => (
+          <Link
+            key={app.path}
+            to={app.path}
+            className={location.pathname === app.path ? "tab active" : "tab"}
           >
             {app.label}
-          </button>
+          </Link>
         ))}
       </nav>
       <div className="tab-content">
-        <ActiveComponent />
+        <Routes>
+          {apps.map((app) => (
+            <Route key={app.path} path={app.path} element={<app.component />} />
+          ))}
+        </Routes>
       </div>
     </div>
   );

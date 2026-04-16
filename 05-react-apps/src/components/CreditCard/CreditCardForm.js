@@ -14,7 +14,7 @@ const initialForm = {
 function validateCardNumber(num) {
   const digits = num.replace(/\s/g, "");
   if (!digits) return "Card number is required";
-  if (!/^\d+$/.test(digits)) return "Card number must be digits only";
+  if (!/^[0-9]+$/.test(digits)) return "Card number must be digits only";
   if (digits.length < 13 || digits.length > 19) return "Card number must be 13–19 digits";
   if (!luhnCheck(digits)) return "Invalid card number (fails Luhn check)";
   return "";
@@ -44,7 +44,7 @@ function validateName(name) {
 
 function validateExpiry(expiry) {
   if (!expiry) return "Expiry date is required";
-  if (!/^\d{2}\/\d{2}$/.test(expiry)) return "Use MM/YY format";
+  if (!/^[0-9]{2}\/[0-9]{2}$/.test(expiry)) return "Use MM/YY format";
   const [mm, yy] = expiry.split("/").map(Number);
   if (mm < 1 || mm > 12) return "Invalid month";
   const now = new Date();
@@ -56,19 +56,19 @@ function validateExpiry(expiry) {
 
 function validateCVV(cvv) {
   if (!cvv) return "CVV is required";
-  if (!/^\d{3,4}$/.test(cvv)) return "CVV must be 3 or 4 digits";
+  if (!/^[0-9]{3,4}$/.test(cvv)) return "CVV must be 3 or 4 digits";
   return "";
 }
 
 // --- Formatting helpers ---
 
 function formatCardNumber(value) {
-  const digits = value.replace(/\D/g, "").slice(0, 19);
-  return digits.replace(/(\d{4})(?=\d)/g, "$1 ");
+  const digits = value.replace(/[^0-9]/g, "").slice(0, 19);
+  return digits.replace(/([0-9]{4})(?=[0-9])/g, "$1 ");
 }
 
 function formatExpiry(value) {
-  const digits = value.replace(/\D/g, "").slice(0, 4);
+  const digits = value.replace(/[^0-9]/g, "").slice(0, 4);
   if (digits.length > 2) return digits.slice(0, 2) + "/" + digits.slice(2);
   return digits;
 }
@@ -97,9 +97,9 @@ function CreditCardForm() {
     const { name, value } = e.target;
     let formatted = value;
 
-    if (name === "cardNumber") formatted = formatCardNumber(value);
+    if (name === "cardNumber")  formatted = formatCardNumber(value);
     if (name === "expiry") formatted = formatExpiry(value);
-    if (name === "cvv") formatted = value.replace(/\D/g, "").slice(0, 4);
+    if (name === "cvv") formatted = value.replace(/[^0-9]/g, "").slice(0, 4);
     if (name === "cardName") formatted = value.replace(/[^a-zA-Z\s]/g, "");
 
     setForm((prev) => ({ ...prev, [name]: formatted }));

@@ -1,0 +1,84 @@
+.up-wrapper {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.up-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.up-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.up-field label {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: #333;
+}
+
+.up-input {
+  padding: 10px 12px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.up-input:focus {
+  border-color: #0f3460;
+}
+
+.up-input.error {
+  border-color: #e74c3c;
+}
+
+.up-error {
+  color: #e74c3c;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.up-btn {
+  padding: 12px;
+  background: #0f3460;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 8px;
+}
+
+.up-btn:hover {
+  background: #1a1a2e;
+}
+
+.up-success {
+  max-width: 400px;
+  margin: 0 auto;
+  text-align: center;
+  padding: 32px;
+  background: #e8f5e9;
+  border-radius: 12px;
+}
+
+.up-success h3 {
+  color: #2e7d32;
+  margin-bottom: 16px;
+}
+
+.up-success p {
+  margin: 8px 0;
+  font-size: 15px;
+}
+
+.up-success .up-btn {
+  margin-top: 20px;
+}

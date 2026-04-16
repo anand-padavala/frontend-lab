@@ -1,0 +1,63 @@
+.ul-wrapper {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.ul-wrapper h2 {
+  margin-bottom: 4px;
+}
+
+.ul-subtitle {
+  color: #666;
+  font-size: 13px;
+  margin-bottom: 16px;
+}
+
+.ul-table-container {
+  overflow-x: auto;
+}
+
+.ul-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.ul-table th,
+.ul-table td {
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 1px solid #eee;
+  white-space: nowrap;
+}
+
+.ul-table th {
+  background: #0f3460;
+  color: #fff;
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+}
+
+.ul-table tbody tr:hover {
+  background: #f5f7fa;
+}
+
+.ul-table tbody tr:nth-child(even) {
+  background: #fafafa;
+}
+
+.ul-table tbody tr:nth-child(even):hover {
+  background: #f0f2f5;
+}
+
+.ul-message {
+  text-align: center;
+  font-size: 16px;
+  padding: 40px;
+  color: #666;
+}
+
+.ul-error {
+  color: #e74c3c;
+}
