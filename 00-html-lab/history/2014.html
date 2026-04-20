@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HTML 2014 — The Modern Web (HTML5)</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #f8f7ff;
+      color: #3a3a4a;
+      line-height: 1.7;
+      font-size: 17px;
+    }
+
+    /* --- Semantic layout using HTML5 tags --- */
+    header {
+      background: #ffffff;
+      color: #333;
+      padding: 55px 20px;
+      text-align: center;
+    }
+    header h1 { font-size: 2.8rem; margin-bottom: 10px; color: #1a1a2e; font-weight: 800; }
+    header p { font-size: 1.1rem; color: #9a9aaa; line-height: 1.6; }
+
+    nav {
+      background: #ffffff;
+      padding: 12px 20px;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid #e8e6f0;
+      box-shadow: 0 2px 8px rgba(139,92,246,0.05);
+    }
+    nav a {
+      color: #8b5cf6;
+      text-decoration: none;
+      margin: 0 8px;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+    nav a:hover { background: #f5f3ff; }
+
+    main {
+      max-width: 900px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+
+    section {
+      background: #ffffff;
+      margin-bottom: 25px;
+      padding: 28px;
+      border-radius: 16px;
+      box-shadow: 0 2px 12px rgba(139,92,246,0.08);
+    }
+    section h2 {
+      color: #1a1a2e;
+      border-bottom: 3px solid #e0ddf5;
+      padding-bottom: 10px;
+      margin-bottom: 18px;
+      font-weight: 700;
+      font-size: 1.6rem;
+    }
+    section h3 { color: #8b5cf6; margin: 18px 0 10px; font-weight: 700; font-size: 1.25rem; }
+    .tag-badge {
+      background: #f5f3ff;
+      padding: 3px 12px;
+      border-radius: 8px;
+      border: 1px solid #e0ddf5;
+      font-size: 1.2rem;
+    }
+
+    article {
+      border-left: 4px solid #c4b5fd;
+      padding: 12px 18px;
+      margin: 12px 0;
+      background: #f5f3ff;
+      border-radius: 10px;
+    }
+
+    aside {
+      background: #fef9ee;
+      border-left: 4px solid #f59e0b;
+      padding: 12px 18px;
+      margin: 12px 0;
+      border-radius: 10px;
+    }
+
+    footer {
+      background: #ffffff;
+      color: #9a9aaa;
+      text-align: center;
+      padding: 24px;
+      margin-top: 30px;
+    }
+    footer a { color: #8b5cf6; text-decoration: none; font-weight: 600; }
+
+    pre {
+      background: #ffffff;
+      color: #5a5a6e;
+      padding: 16px;
+      border-radius: 10px;
+      overflow-x: auto;
+      margin: 12px 0;
+      border: 1px solid #e8e6f0;
+    }
+    .demo-box {
+      border: 2px dashed #c4b5fd;
+      padding: 18px;
+      margin: 12px 0;
+      border-radius: 12px;
+      background: #faf9ff;
+    }
+    .tag { color: #8b5cf6; font-weight: bold; font-family: 'SF Mono', 'Fira Code', monospace; }
+    table { border-collapse: collapse; width: 100%; margin: 12px 0; }
+    td, th { border: 1px solid #e8e6f0; padding: 10px; }
+    th { background: #f5f3ff; color: #1a1a2e; font-weight: 700; }
+    mark { padding: 2px 6px; background: #fef3c7; border-radius: 4px; }
+    details { margin: 12px 0; background: #faf9ff; padding: 14px; border-radius: 10px; }
+    summary { cursor: pointer; font-weight: 700; color: #8b5cf6; }
+    meter, progress { width: 300px; height: 25px; }
+    button {
+      background: #8b5cf6; color: white; border: none; padding: 8px 18px;
+      border-radius: 8px; cursor: pointer; font-weight: 600;
+    }
+    button:hover { background: #7c3aed; }
+  </style>
+</head>
+<body>
+
+<!-- ===== HTML5 SEMANTIC TAGS IN ACTION ===== -->
+<!-- This page's layout IS the demo — header, nav, main, section, article, aside, footer -->
+
+<header>
+  <h1>HTML5 — 2014</h1>
+  <p>The biggest update in HTML history. The web becomes an application platform.</p>
+</header>
+
+<nav>
+  <a href="#semantic">Semantic</a>
+  <a href="#video">Video</a>
+  <a href="#audio">Audio</a>
+  <a href="#canvas">Canvas</a>
+  <a href="#forms">Forms</a>
+  <a href="#interactive">Interactive</a>
+  <a href="#text">Text</a>
+  <a href="index.html">Timeline</a>
+</nav>
+
+<main>
+
+  <!-- SECTION 1: Semantic Tags -->
+  <section id="semantic">
+    <h2>1. Semantic Tags — Meaningful Structure</h2>
+
+    <p>
+      Before HTML5, everything was <span class="tag">&lt;div&gt;</span>.
+      A page had divs for header, divs for navigation, divs for content.
+      The browser had no idea what each div meant.
+    </p>
+
+    <pre>
+  Before (HTML 4):                  After (HTML5):
+
+  &lt;div id="header"&gt;               &lt;header&gt;
+  &lt;div id="nav"&gt;                  &lt;nav&gt;
+  &lt;div id="main"&gt;                 &lt;main&gt;
+  &lt;div id="sidebar"&gt;              &lt;aside&gt;
+  &lt;div class="post"&gt;              &lt;article&gt;
+  &lt;div id="footer"&gt;               &lt;footer&gt;</pre>
+
+    <p>
+      HTML5 semantic tags give <strong>meaning</strong> to sections.
+      Screen readers, search engines, and browsers all understand what each part is.
+    </p>
+
+    <p><strong>This page itself uses all these tags — view source to see them!</strong></p>
+
+    <table>
+      <tr>
+        <th>Tag</th>
+        <th>Meaning</th>
+        <th>Used on this page?</th>
+      </tr>
+      <tr><td class="tag">&lt;header&gt;</td><td>Page/section header</td><td>Yes — the blue title area at the top</td></tr>
+      <tr><td class="tag">&lt;nav&gt;</td><td>Navigation links</td><td>Yes — the dark bar with links</td></tr>
+      <tr><td class="tag">&lt;main&gt;</td><td>Main content of the page</td><td>Yes — wraps all sections</td></tr>
+      <tr><td class="tag">&lt;section&gt;</td><td>Thematic section</td><td>Yes — each numbered section</td></tr>
+      <tr><td class="tag">&lt;article&gt;</td><td>Self-contained content</td><td>Yes — see the blue-bordered box below</td></tr>
+      <tr><td class="tag">&lt;aside&gt;</td><td>Side note or related info</td><td>Yes — see the yellow box below</td></tr>
+      <tr><td class="tag">&lt;footer&gt;</td><td>Page/section footer</td><td>Yes — the dark area at the bottom</td></tr>
+    </table>
+
+    <article>
+      <h3>This is an &lt;article&gt;</h3>
+      <p>An article is self-contained content that makes sense on its own — like a blog post, news story, or comment.</p>
+    </article>
+
+    <aside>
+      <strong>This is an &lt;aside&gt;</strong><br>
+      An aside contains related information — like a sidebar note, a tip, or a "did you know?" box.
+    </aside>
+  </section>
+
+  <!-- SECTION 2: Video -->
+  <section id="video">
+    <h2>2. Video — <span class="tag-badge">&lt;video&gt;</span> — Native Video Playback</h2>
+
+    <p>
+      Before HTML5, playing video on the web required <strong>Adobe Flash</strong> — a browser plugin.
+      Flash was slow, insecure, and didn't work on iPhones (Steve Jobs refused to support it).
+      HTML5 made video native — no plugins needed.
+    </p>
+
+    <div class="demo-box">
+      <video width="100%" controls>
+        <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+      <p><em>A sample HTML5 video with built-in controls (play, pause, volume, fullscreen).</em></p>
+    </div>
+
+    <pre>
+  &lt;video width="640" controls&gt;
+    &lt;source src="movie.mp4" type="video/mp4"&gt;
+    Your browser does not support video.
+  &lt;/video&gt;
+
+  controls   = show play/pause/volume buttons
+  autoplay   = start playing automatically
+  loop       = repeat when finished
+  muted      = start muted
+  poster     = show an image before video plays</pre>
+  </section>
+
+  <!-- SECTION 3: Audio -->
+  <section id="audio">
+    <h2>3. Audio — <span class="tag-badge">&lt;audio&gt;</span> — Native Audio Playback</h2>
+
+    <p>Same idea as video — play audio without plugins:</p>
+
+    <div class="demo-box">
+      <audio controls>
+        <source src="https://www.w3schools.com/html/horse.mp3" type="audio/mpeg">
+        Your browser does not support the audio tag.
+      </audio>
+      <p><em>A sample HTML5 audio player.</em></p>
+    </div>
+
+    <pre>
+  &lt;audio controls&gt;
+    &lt;source src="song.mp3" type="audio/mpeg"&gt;
+    Your browser does not support audio.
+  &lt;/audio&gt;</pre>
+  </section>
+
+  <!-- SECTION 4: Canvas -->
+  <section id="canvas">
+    <h2>4. Canvas — <span class="tag-badge">&lt;canvas&gt;</span> — Draw with JavaScript</h2>
+
+    <p>
+      The canvas tag gives you a blank drawing area.
+      You draw on it using JavaScript — shapes, text, images, animations, even games.
+    </p>
+
+    <div class="demo-box">
+      <canvas id="myCanvas" width="500" height="200" style="border: 1px solid #999; background: white; display: block; margin: 0 auto;"></canvas>
+      <p><em>Shapes drawn with JavaScript on a &lt;canvas&gt; element.</em></p>
+    </div>
+
+    <script>
+      var c = document.getElementById("myCanvas");
+      var ctx = c.getContext("2d");
+
+      // Blue rectangle
+      ctx.fillStyle = "#3498db";
+      ctx.fillRect(20, 20, 120, 80);
+
+      // Red circle
+      ctx.beginPath();
+      ctx.arc(230, 60, 50, 0, 2 * Math.PI);
+      ctx.fillStyle = "#e74c3c";
+      ctx.fill();
+
+      // Green triangle
+      ctx.beginPath();
+      ctx.moveTo(330, 100);
+      ctx.lineTo(380, 20);
+      ctx.lineTo(430, 100);
+      ctx.closePath();
+      ctx.fillStyle = "#27ae60";
+      ctx.fill();
+
+      // Text
+      ctx.font = "16px Verdana";
+      ctx.fillStyle = "#333";
+      ctx.fillText("Rectangle", 30, 130);
+      ctx.fillText("Circle", 200, 130);
+      ctx.fillText("Triangle", 340, 130);
+
+      // Gradient line
+      var gradient = ctx.createLinearGradient(20, 160, 450, 160);
+      gradient.addColorStop(0, "#3498db");
+      gradient.addColorStop(0.5, "#e74c3c");
+      gradient.addColorStop(1, "#27ae60");
+      ctx.strokeStyle = gradient;
+      ctx.lineWidth = 5;
+      ctx.beginPath();
+      ctx.moveTo(20, 170);
+      ctx.lineTo(450, 170);
+      ctx.stroke();
+    </script>
+
+    <pre>
+  &lt;canvas id="myCanvas" width="500" height="200"&gt;&lt;/canvas&gt;
+
+  &lt;script&gt;
+    var c = document.getElementById("myCanvas");
+    var ctx = c.getContext("2d");
+
+    ctx.fillStyle = "blue";
+    ctx.fillRect(20, 20, 120, 80);     // rectangle
+
+    ctx.beginPath();
+    ctx.arc(200, 60, 50, 0, 2 * Math.PI);  // circle
+    ctx.fillStyle = "red";
+    ctx.fill();
+  &lt;/script&gt;</pre>
+  </section>
+
+  <!-- SECTION 5: New Form Inputs -->
+  <section id="forms">
+    <h2>5. New Form Input Types</h2>
+
+    <p>
+      HTML5 added many new input types. The browser provides built-in UI
+      for dates, colors, ranges, etc. — no JavaScript needed.
+    </p>
+
+    <form>
+      <table>
+        <tr>
+          <th>Input Type</th>
+          <th>Live Demo</th>
+          <th>Code</th>
+        </tr>
+        <tr>
+          <td><strong>date</strong></td>
+          <td><input type="date"></td>
+          <td><code>&lt;input type="date"&gt;</code></td>
+        </tr>
+        <tr>
+          <td><strong>time</strong></td>
+          <td><input type="time"></td>
+          <td><code>&lt;input type="time"&gt;</code></td>
+        </tr>
+        <tr>
+          <td><strong>datetime-local</strong></td>
+          <td><input type="datetime-local"></td>
+          <td><code>&lt;input type="datetime-local"&gt;</code></td>
+        </tr>
+        <tr>
+          <td><strong>email</strong></td>
+          <td><input type="email" placeholder="user@example.com"></td>
+          <td><code>&lt;input type="email"&gt;</code></td>
+        </tr>
+        <tr>
+          <td><strong>url</strong></td>
+          <td><input type="url" placeholder="https://example.com"></td>
+          <td><code>&lt;input type="url"&gt;</code></td>
+        </tr>
+        <tr>
+          <td><strong>tel</strong></td>
+          <td><input type="tel" placeholder="123-456-7890"></td>
+          <td><code>&lt;input type="tel"&gt;</code></td>
+        </tr>
+        <tr>
+          <td><strong>number</strong></td>
+          <td><input type="number" min="0" max="100" value="50"></td>
+          <td><code>&lt;input type="number" min="0" max="100"&gt;</code></td>
+        </tr>
+        <tr>
+          <td><strong>range</strong> (slider)</td>
+          <td><input type="range" min="0" max="100" value="50"></td>
+          <td><code>&lt;input type="range" min="0" max="100"&gt;</code></td>
+        </tr>
+        <tr>
+          <td><strong>color</strong></td>
+          <td><input type="color" value="#3498db"></td>
+          <td><code>&lt;input type="color"&gt;</code></td>
+        </tr>
+        <tr>
+          <td><strong>search</strong></td>
+          <td><input type="search" placeholder="Search..."></td>
+          <td><code>&lt;input type="search"&gt;</code></td>
+        </tr>
+      </table>
+
+      <h3>New Form Attributes</h3>
+      <p>
+        <strong>placeholder</strong> — hint text inside the field:<br>
+        <input type="text" placeholder="Type something here..." size="30">
+      </p>
+      <p>
+        <strong>required</strong> — must fill before submitting:<br>
+        <input type="text" required placeholder="This field is required" size="30">
+        <button type="submit">Try Submit</button>
+      </p>
+      <p>
+        <strong>autofocus</strong> — cursor goes here automatically<br>
+        <strong>pattern</strong> — regex validation (e.g., only 5 digits):<br>
+        <input type="text" pattern="[0-9]{5}" placeholder="ZIP code (5 digits)" size="30" title="Enter 5 digit ZIP code">
+      </p>
+    </form>
+  </section>
+
+  <!-- SECTION 6: Interactive Elements -->
+  <section id="interactive">
+    <h2>6. Interactive Elements</h2>
+
+    <h3>Details &amp; Summary — Collapsible Content</h3>
+
+    <p>Click to expand/collapse — no JavaScript needed:</p>
+
+    <details>
+      <summary>What is HTML5?</summary>
+      <p>HTML5 is the fifth major version of HTML, published in 2014.
+      It added semantic elements, multimedia support, canvas drawing,
+      new form inputs, and many APIs for building web applications.</p>
+    </details>
+
+    <details>
+      <summary>Why was Flash replaced?</summary>
+      <p>Adobe Flash was a browser plugin needed for video, audio, and games.
+      It was slow, had security vulnerabilities, and didn't work on mobile devices.
+      Steve Jobs refused to support it on iPhones in 2010, accelerating its decline.
+      HTML5's native &lt;video&gt; and &lt;canvas&gt; tags made Flash unnecessary.
+      Flash was officially discontinued in December 2020.</p>
+    </details>
+
+    <details>
+      <summary>What came after HTML5?</summary>
+      <p>HTML is now a "living standard" — there is no HTML6.
+      The WHATWG (Web Hypertext Application Technology Working Group)
+      continuously updates the HTML specification.
+      New features are added gradually rather than in big version jumps.</p>
+    </details>
+
+    <pre>
+  &lt;details&gt;
+    &lt;summary&gt;Click to expand&lt;/summary&gt;
+    &lt;p&gt;Hidden content revealed when clicked.&lt;/p&gt;
+  &lt;/details&gt;</pre>
+
+    <h3>Meter — Display a measurement</h3>
+
+    <p>
+      Disk usage: <meter value="7" min="0" max="10">7 out of 10 GB</meter> 7/10 GB<br>
+      Battery: <meter value="0.3" min="0" max="1" low="0.25" high="0.75" optimum="1">30%</meter> 30%<br>
+      Score: <meter value="85" min="0" max="100" low="40" high="70" optimum="100">85%</meter> 85/100
+    </p>
+
+    <pre>
+  &lt;meter value="7" min="0" max="10"&gt;7/10&lt;/meter&gt;</pre>
+
+    <h3>Progress — Show task completion</h3>
+
+    <p>
+      Download: <progress value="65" max="100"></progress> 65%<br>
+      Loading: <progress></progress> (indeterminate — no value set)
+    </p>
+
+    <pre>
+  &lt;progress value="65" max="100"&gt;&lt;/progress&gt;
+  &lt;progress&gt;&lt;/progress&gt;   &lt;!-- indeterminate --&gt;</pre>
+  </section>
+
+  <!-- SECTION 7: New Text Tags -->
+  <section id="text">
+    <h2>7. New Text-Level Tags</h2>
+
+    <p>
+      <strong>Mark</strong> — <mark>highlighted text</mark> (like a yellow marker):<br>
+      <code>&lt;mark&gt;highlighted&lt;/mark&gt;</code>
+    </p>
+
+    <p>
+      <strong>Time</strong> — machine-readable date/time:<br>
+      Published on <time datetime="2014-10-28">October 28, 2014</time><br>
+      <code>&lt;time datetime="2014-10-28"&gt;October 28, 2014&lt;/time&gt;</code>
+    </p>
+
+    <p>
+      <strong>Output</strong> — result of a calculation:<br>
+      3 + 4 = <output>7</output><br>
+      <code>&lt;output&gt;7&lt;/output&gt;</code>
+    </p>
+
+    <p>
+      <strong>Figure &amp; Figcaption</strong> — image with caption:
+    </p>
+
+    <figure style="text-align: center;">
+      <img src="https://via.placeholder.com/400x150/2c3e50/ecf0f1?text=HTML5+Figure+Element" alt="HTML5 figure demo" style="border-radius: 5px;">
+      <figcaption><em>Figure 1: An image inside a &lt;figure&gt; tag with a &lt;figcaption&gt;</em></figcaption>
+    </figure>
+
+    <pre>
+  &lt;figure&gt;
+    &lt;img src="photo.jpg" alt="Description"&gt;
+    &lt;figcaption&gt;Caption text&lt;/figcaption&gt;
+  &lt;/figure&gt;</pre>
+  </section>
+
+  <!-- SUMMARY -->
+  <section>
+    <h2>Tags Summary</h2>
+
+    <pre>
+  Semantic:     &lt;header&gt; &lt;nav&gt; &lt;main&gt; &lt;section&gt; &lt;article&gt; &lt;aside&gt; &lt;footer&gt;
+  Media:        &lt;video&gt; &lt;audio&gt; &lt;source&gt;
+  Drawing:      &lt;canvas&gt;
+  Form inputs:  date, time, email, url, tel, number, range, color, search
+  Form attrs:   placeholder, required, autofocus, pattern
+  Interactive:  &lt;details&gt; &lt;summary&gt; &lt;meter&gt; &lt;progress&gt;
+  Text:         &lt;mark&gt; &lt;time&gt; &lt;output&gt; &lt;figure&gt; &lt;figcaption&gt;</pre>
+  </section>
+
+</main>
+
+<footer>
+  <p><a href="1999.html">&larr; Previous: 1999</a> &nbsp;|&nbsp; <a href="index.html">Back to Timeline</a></p>
+  <p>Frontend Learning Lab — HTML History</p>
+</footer>
+
+</body>
+</html>

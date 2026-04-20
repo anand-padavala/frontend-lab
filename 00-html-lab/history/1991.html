@@ -1,0 +1,274 @@
+<title>HTML 1991 — The Beginning</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #f8f7ff;
+    color: #3a3a4a;
+    margin: 0;
+    padding: 40px 20px;
+    max-width: 820px;
+    margin: 0 auto;
+    font-size: 17px;
+    line-height: 1.7;
+  }
+  h1 { color: #1a1a2e; font-weight: 800; font-size: 2.6rem; margin-bottom: 8px; }
+  h2 { color: #1a1a2e; font-weight: 700; font-size: 1.8rem; border-bottom: 3px solid #e0ddf5; padding-bottom: 10px; margin-top: 30px; }
+  h3 { color: #8b5cf6; font-weight: 700; font-size: 1.35rem; margin-top: 25px; }
+  h4 { color: #6d28d9; font-size: 1.15rem; }
+  h5 { color: #7c3aed; font-size: 1.05rem; }
+  h6 { color: #9a9aaa; font-size: 0.95rem; }
+  p { font-size: 1.05rem; color: #4a4a5a; line-height: 1.75; margin: 12px 0; }
+  a { color: #8b5cf6; font-weight: 600; text-decoration: none; }
+  a:hover { text-decoration: underline; color: #7c3aed; }
+  hr { border: none; border-top: 1px solid #e8e6f0; margin: 30px 0; }
+  ul, ol { font-size: 1.05rem; color: #4a4a5a; padding-left: 24px; margin: 12px 0; }
+  li { margin: 8px 0; line-height: 1.6; }
+  dl { margin: 12px 0; }
+  dt { font-weight: 700; color: #1a1a2e; font-size: 1.1rem; margin-top: 14px; }
+  dd { color: #5a5a6e; margin-left: 20px; margin-bottom: 8px; font-size: 1.02rem; }
+  address { font-style: normal; color: #9a9aaa; margin-top: 20px; font-size: 0.9rem; }
+  pre {
+    background: #ffffff;
+    border: 1px solid #e8e6f0;
+    padding: 16px 20px;
+    border-radius: 12px;
+    overflow-x: auto;
+    color: #5a5a6e;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    box-shadow: 0 2px 8px rgba(139,92,246,0.06);
+  }
+
+  /* Elegant tag display — makes tag names stand out */
+  h3 code, p code, pre code, li code {
+    font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  }
+</style>
+
+<h1>HTML — 1991</h1>
+<h2>Tim Berners-Lee, CERN, Switzerland</h2>
+
+<p>
+This page uses ONLY tags available in the original 1991 HTML.
+No images. No tables. No forms. No colors. No CSS. No JavaScript.
+Just text, headings, links, and lists — exactly how the first web pages looked.
+</p>
+
+<hr>
+
+<h2>The 18 Original Tags</h2>
+
+<p>
+HTML started with just 18 tags. Every tag here was part of Tim Berners-Lee's
+original specification. This is the entire language — nothing more existed.
+</p>
+
+<hr>
+
+<h3>1. Title — <span style="background:#f5f3ff; padding:3px 12px; border-radius:8px; border:1px solid #e0ddf5; font-size:1.3rem;">&lt;title&gt;</span></h3>
+
+<p>
+The title tag sets the text shown in the browser's title bar.
+Look at the top of this window — it says "HTML 1991 — The Beginning".
+That is the title tag at work. Every page needs one.
+</p>
+
+<pre>
+  &lt;title&gt;My Page Title&lt;/title&gt;
+</pre>
+
+<hr>
+
+<h3>2. Headings — <span style="background:#f5f3ff; padding:3px 12px; border-radius:8px; border:1px solid #e0ddf5; font-size:1.3rem;">&lt;h1&gt;</span> to <span style="background:#f5f3ff; padding:3px 12px; border-radius:8px; border:1px solid #e0ddf5; font-size:1.3rem;">&lt;h6&gt;</span></h3>
+
+<p>Six levels of headings, from largest to smallest:</p>
+
+<h1>Heading Level 1 — Main title</h1>
+<h2>Heading Level 2 — Section</h2>
+<h3>Heading Level 3 — Sub-section</h3>
+<h4>Heading Level 4 — Detail</h4>
+<h5>Heading Level 5 — Minor detail</h5>
+<h6>Heading Level 6 — Smallest heading</h6>
+
+<pre>
+  &lt;h1&gt;Heading Level 1&lt;/h1&gt;
+  &lt;h2&gt;Heading Level 2&lt;/h2&gt;
+  &lt;h3&gt;Heading Level 3&lt;/h3&gt;
+</pre>
+
+<hr>
+
+<h3>3. Paragraph — <span style="background:#f5f3ff; padding:3px 12px; border-radius:8px; border:1px solid #e0ddf5; font-size:1.3rem;">&lt;p&gt;</span></h3>
+
+<p>
+The paragraph tag wraps a block of text.
+Without it, all text runs together on one line.
+</p>
+
+<p>
+This is a second paragraph. Notice the gap between paragraphs.
+The browser adds spacing automatically.
+</p>
+
+<pre>
+  &lt;p&gt;First paragraph.&lt;/p&gt;
+  &lt;p&gt;Second paragraph.&lt;/p&gt;
+</pre>
+
+<hr>
+
+<h3>4. Anchor (Link) — <span style="background:#f5f3ff; padding:3px 12px; border-radius:8px; border:1px solid #e0ddf5; font-size:1.3rem;">&lt;a href=""&gt;</span> — THE Invention</h3>
+
+<p>
+This is the tag that made the web THE WEB.
+Before this, documents were isolated files.
+This tag connects one page to another — creating a web of documents.
+</p>
+
+<a href="index.html">Go back to the Timeline</a>
+
+<p>Here is a link to an external site:</p>
+
+<a href="http://info.cern.ch/hypertext/WWW/TheProject.html">
+  The First Website Ever (CERN, 1991)
+</a>
+
+<pre>
+  &lt;a href="other-page.html"&gt;Click here&lt;/a&gt;
+  &lt;a href="http://info.cern.ch"&gt;External link&lt;/a&gt;
+</pre>
+
+<hr>
+
+<h3>5. Unordered List — <span style="background:#f5f3ff; padding:3px 12px; border-radius:8px; border:1px solid #e0ddf5; font-size:1.3rem;">&lt;ul&gt;</span> <span style="background:#f5f3ff; padding:3px 12px; border-radius:8px; border:1px solid #e0ddf5; font-size:1.3rem;">&lt;li&gt;</span></h3>
+
+<p>A bulleted list:</p>
+
+<ul>
+  <li>HTML was created at CERN</li>
+  <li>It was designed for sharing research papers</li>
+  <li>The first browser was also a text editor</li>
+</ul>
+
+<pre>
+  &lt;ul&gt;
+    &lt;li&gt;Item one&lt;/li&gt;
+    &lt;li&gt;Item two&lt;/li&gt;
+  &lt;/ul&gt;
+</pre>
+
+<hr>
+
+<h3>6. Ordered List — <span style="background:#f5f3ff; padding:3px 12px; border-radius:8px; border:1px solid #e0ddf5; font-size:1.3rem;">&lt;ol&gt;</span> <span style="background:#f5f3ff; padding:3px 12px; border-radius:8px; border:1px solid #e0ddf5; font-size:1.3rem;">&lt;li&gt;</span></h3>
+
+<p>A numbered list:</p>
+
+<ol>
+  <li>Write HTML document</li>
+  <li>Save as .html file</li>
+  <li>Open in browser</li>
+  <li>Share the URL</li>
+</ol>
+
+<pre>
+  &lt;ol&gt;
+    &lt;li&gt;Step one&lt;/li&gt;
+    &lt;li&gt;Step two&lt;/li&gt;
+  &lt;/ol&gt;
+</pre>
+
+<hr>
+
+<h3>7. Definition List — <span style="background:#f5f3ff; padding:3px 12px; border-radius:8px; border:1px solid #e0ddf5; font-size:1.3rem;">&lt;dl&gt;</span> <span style="background:#f5f3ff; padding:3px 12px; border-radius:8px; border:1px solid #e0ddf5; font-size:1.3rem;">&lt;dt&gt;</span> <span style="background:#f5f3ff; padding:3px 12px; border-radius:8px; border:1px solid #e0ddf5; font-size:1.3rem;">&lt;dd&gt;</span></h3>
+
+<p>Used for term-definition pairs (like a glossary):</p>
+
+<dl>
+  <dt>HTML</dt>
+  <dd>HyperText Markup Language — the language of web pages</dd>
+
+  <dt>HTTP</dt>
+  <dd>HyperText Transfer Protocol — how browsers talk to servers</dd>
+
+  <dt>URL</dt>
+  <dd>Uniform Resource Locator — the address of a web page</dd>
+
+  <dt>CERN</dt>
+  <dd>European Organization for Nuclear Research — where HTML was born</dd>
+</dl>
+
+<pre>
+  &lt;dl&gt;
+    &lt;dt&gt;Term&lt;/dt&gt;
+    &lt;dd&gt;Definition of the term&lt;/dd&gt;
+  &lt;/dl&gt;
+</pre>
+
+<hr>
+
+<h3>8. Address — <span style="background:#f5f3ff; padding:3px 12px; border-radius:8px; border:1px solid #e0ddf5; font-size:1.3rem;">&lt;address&gt;</span></h3>
+
+<p>Used to show contact information for the page author:</p>
+
+<address>
+  Tim Berners-Lee, CERN, Geneva, Switzerland
+</address>
+
+<pre>
+  &lt;address&gt;Author Name, Organization&lt;/address&gt;
+</pre>
+
+<hr>
+
+<h3>9. Preformatted Text — <span style="background:#f5f3ff; padding:3px 12px; border-radius:8px; border:1px solid #e0ddf5; font-size:1.3rem;">&lt;pre&gt;</span></h3>
+
+<p>
+Displays text exactly as typed — preserving spaces and line breaks.
+All code examples on this page use the pre tag.
+</p>
+
+<pre>
+  This    text    has    spaces.
+  And this is on a new line.
+     This is indented.
+</pre>
+
+<hr>
+
+<h3>10. Horizontal Rule — <span style="background:#f5f3ff; padding:3px 12px; border-radius:8px; border:1px solid #e0ddf5; font-size:1.3rem;">&lt;hr&gt;</span></h3>
+
+<p>Draws a horizontal line to separate sections (used throughout this page):</p>
+
+<hr>
+
+<pre>
+  &lt;hr&gt;
+</pre>
+
+<hr>
+
+<h2>What 1991 HTML Could NOT Do</h2>
+
+<ul>
+  <li>No images (added 1993)</li>
+  <li>No tables (added 1995)</li>
+  <li>No forms or user input (added 1995)</li>
+  <li>No colors or fonts (added 1997)</li>
+  <li>No CSS styling (added 1996)</li>
+  <li>No JavaScript (added 1995)</li>
+  <li>No video or audio (added 2014)</li>
+</ul>
+
+<p>
+This page is exactly what the web looked like in 1991 —
+plain text on a white background with blue links.
+Every website in the world looked like this.
+</p>
+
+<hr>
+
+<p><a href="index.html">&larr; Back to Timeline</a> | <a href="1993.html">Next: 1993 &rarr;</a></p>
+
+<address>Frontend Learning Lab — HTML History</address>
